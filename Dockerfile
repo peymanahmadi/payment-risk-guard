@@ -1,5 +1,5 @@
 # --- build stage ---
-FROM golang:1.23-bookworm AS build
+FROM golang:1.26-bookworm AS build
 WORKDIR /src
 
 # Set Go proxy to use multiple mirrors
