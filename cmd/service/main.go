@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/peymanahmadi/payment-risk-guard/internal/adapter/httpapi"
+	"github.com/peymanahmadi/payment-risk-guard/internal/adapter/kafkaconsumer"
 	"github.com/peymanahmadi/payment-risk-guard/internal/adapter/postgres"
 	"github.com/peymanahmadi/payment-risk-guard/internal/config"
 	"github.com/peymanahmadi/payment-risk-guard/internal/risk"
@@ -61,11 +62,20 @@ func main() {
 		WriteTimeout: 10 * time.Second,
 	}
 
-	errCh := make(chan error, 1)
+	consumer := kafkaconsumer.New(cfg.KafkaBrokers, cfg.KafkaTopic, cfg.KafkaGroupID, process, log)
+
+	errCh := make(chan error, 2)
 
 	go func() {
 		log.Info("http server listening", "addr", cfg.HTTPAddr)
 		if err := httpServer.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			errCh <- err
+		}
+	}()
+
+	go func() {
+		log.Info("kafka consumer starting", "topic", cfg.KafkaTopic, "brokers", cfg.KafkaBrokers)
+		if err := consumer.Run(ctx); err != nil {
 			errCh <- err
 		}
 	}()
