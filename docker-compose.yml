@@ -29,5 +29,19 @@ services:
       POSTGRES_DSN: "postgres://postgres:postgres@postgres:5432/riskguard?sslmode=disable"
       RISK_THRESHOLD: "50"
 
+  simulator:
+    build:
+      context: .
+      target: simulator
+    depends_on:
+      kafka:
+        condition: service_healthy
+      service:
+        condition: service_started
+    environment:
+      KAFKA_BROKERS: "kafka:29092"
+      KAFKA_TOPIC: "payments.transactions"
+    command: ["--interval=500ms", "--anomaly-every=6"]
+
 volumes:
   pgdata:
