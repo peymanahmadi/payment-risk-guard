@@ -7,15 +7,15 @@ import (
 )
 
 type Transaction struct {
-	ID uuid.UUID `json:"id"`
-	AccountID string `json:"account_id"`
-	Amount float64 `json:"amount"`
-	Currency string `json:"currency"`
-	Country string `json:"country"`
-	IPAddress string `json:"ip_address"`
-	PaymentType string `json:"payment_type"`
-	OccurredAt time.Time `json:"occurred_at"`
-	CreatedAt time.Time `json:"created_at"`
+	ID          uuid.UUID `json:"id"`
+	AccountID   string    `json:"account_id"`
+	Amount      float64   `json:"amount"`
+	Currency    string    `json:"currency"`
+	Country     string    `json:"country"`
+	IPAddress   string    `json:"ip_address"`
+	PaymentType string    `json:"payment_type"`
+	OccurredAt  time.Time `json:"occurred_at"`
+	CreatedAt   time.Time `json:"created_at"`
 }
 
 func NewTransaction(accountID string, amount float64, currency, country, ip, paymentType string, occurredAt time.Time) (*Transaction, error) {
@@ -30,14 +30,14 @@ func NewTransaction(accountID string, amount float64, currency, country, ip, pay
 	}
 
 	return &Transaction{
-		ID: uuid.New(),
-		AccountID: accountID,
-		Amount: amount,
-		Currency: currency,
-		Country: country,
-		IPAddress: ip,
+		ID:          uuid.New(),
+		AccountID:   accountID,
+		Amount:      amount,
+		Currency:    currency,
+		Country:     country,
+		IPAddress:   ip,
 		PaymentType: paymentType,
-		OccurredAt: occurredAt.UTC(),
-		CreatedAt: time.Now().UTC(),
+		OccurredAt:  occurredAt.UTC(),
+		CreatedAt:   time.Now().UTC(),
 	}, nil
 }
